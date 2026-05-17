@@ -2,6 +2,10 @@
 
 Aurel can run in CI without secrets for public repositories. Use JSON output when another tool needs to parse the result, and use `--min-score` when the workflow should fail below a readiness threshold.
 
+Use this page when you want a scheduled readiness check, a pull request score gate, or a JSON artifact that another workflow step can read.
+
+![Aurel CI score gate output](screenshots/ci-score-gate.svg)
+
 ## Repository Automation
 
 This repository includes GitHub Actions workflows for contributor checks:
@@ -13,6 +17,8 @@ This repository includes GitHub Actions workflows for contributor checks:
 To make these checks block merges, enable branch protection for `main` in GitHub and require the `CI` and `Security` status checks before merging pull requests. The release workflow expects PyPI trusted publishing to be configured for this repository before tagged releases can publish.
 
 ## Basic Score Gate
+
+This workflow installs Aurel, writes a JSON report, and fails with exit code `3` if the score is below the threshold.
 
 ```yaml
 name: Contributor readiness

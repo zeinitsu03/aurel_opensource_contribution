@@ -2,6 +2,10 @@
 
 This roadmap keeps Aurel comprehensive while protecting the project goal: a free, open-source contributor-readiness CLI that anyone can run and improve.
 
+Use this roadmap to understand what has already landed, what belongs in the current release scope, and what should wait for a later version.
+
+![Aurel roadmap overview](docs/screenshots/roadmap-overview.svg)
+
 ## v0.6: Security And Provider Hardening
 
 - Scope GitHub tokens to GitHub requests only.

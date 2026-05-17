@@ -2,6 +2,13 @@
 
 Aurel welcomes contributors with different experience levels, backgrounds, and goals. The project is especially focused on helping beginners contribute with confidence, so discussions should stay clear, respectful, and practical.
 
+## Short Version
+
+- Assume people are here to learn or improve the project.
+- Keep feedback specific and actionable.
+- Ask for changes with enough context that a beginner can respond.
+- Move sensitive or safety-related concerns to private maintainer channels.
+
 ## Expected Behavior
 
 - Be patient with beginner questions and incomplete first attempts.

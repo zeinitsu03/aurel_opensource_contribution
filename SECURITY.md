@@ -1,5 +1,15 @@
 # Security Policy
 
+This page explains how to report security issues and what Aurel does with network access and tokens.
+
+## Quick Summary
+
+- Do not report vulnerabilities in public issues.
+- Aurel does not run code from analyzed repositories.
+- Aurel does not write to analyzed repositories.
+- GitHub tokens are optional and are only sent to GitHub requests.
+- Core analysis does not require hosted AI services, paid APIs, or secrets.
+
 ## Reporting A Vulnerability
 
 Please do not report security vulnerabilities in public issues.

@@ -19,6 +19,10 @@ The signature feature is the Starter PR Kit: a practical first contribution sugg
 - `CONTRIBUTING.md`: contribution guide.
 - `SECURITY.md`: responsible disclosure policy.
 - `docs/ARCHITECTURE.md`: system flow and extension points.
+- `docs/CI_USAGE.md`: CI score gates and automation examples.
+- `docs/EXTENDING.md`: contributor-facing extension guide.
+- `docs/REPORT_SCHEMA.md`: JSON output contract for automation.
+- `docs/screenshots/`: reusable README and documentation visuals.
 - `ROADMAP.md`: staged future work.
 
 ## Coding Rules
@@ -75,4 +79,5 @@ A change is done when:
 - Relevant tests are added or updated.
 - `pytest` passes.
 - Documentation is updated when behavior changes.
+- Screenshots or sample report snippets are updated when user-facing output changes.
 - The change stays within the current planned version scope.

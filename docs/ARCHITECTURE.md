@@ -2,6 +2,10 @@
 
 Aurel is built as a small pipeline. Each step produces structured data that the next step can use.
 
+Use this page when you want to understand how a repository URL becomes a scored report, or when you need to decide which module should own a change.
+
+![Aurel analysis pipeline](screenshots/architecture-flow.svg)
+
 ```text
 repository URL
   -> parser
@@ -40,6 +44,8 @@ repository URL
 - `aurel/guidance.py`: builds the Starter PR Kit, onboarding path, and improvement backlog.
 - `aurel/config.py`: loads project-specific `aurel.yml` rules, presets, labels, and command checks.
 - `aurel/report.py`: formats terminal, text, Markdown, JSON, HTML, and comparison output.
+
+If you are changing behavior, start with the module that owns the decision and then update the matching tests. For example, profile detection belongs in `profiles.py`, but user-facing explanation for that profile belongs in `report.py` or `guidance.py`.
 
 ## Execution Flow
 

@@ -14,6 +14,19 @@ Aurel focuses on a practical question:
 
 Can a contributor understand this repository well enough to make a useful first contribution?
 
+## Start Here
+
+| If you want to... | Read this |
+| --- | --- |
+| Install and run Aurel | [Installation](#installation) and [Usage](#usage) |
+| See what the CLI looks like | [Screenshots](#screenshots) |
+| Understand the report fields | [docs/REPORT_SCHEMA.md](docs/REPORT_SCHEMA.md) |
+| Run Aurel in CI | [docs/CI_USAGE.md](docs/CI_USAGE.md) |
+| Contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Add providers, profiles, checks, or reports | [docs/EXTENDING.md](docs/EXTENDING.md) |
+| Understand the code flow | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| See planned work | [ROADMAP.md](ROADMAP.md) |
+
 ## Features
 
 - Accepts GitHub, GitLab, and Bitbucket repository URLs.
@@ -157,13 +170,27 @@ The token is optional. Public repositories can be analyzed without one, but GitH
 
 ## Screenshots
 
+These screenshots use placeholder repositories so you can understand the workflow without depending on live provider data.
+
 Start Aurel and verify the CLI entry point:
 
 ![Aurel startup banner in a terminal](docs/screenshots/aurel-start.svg)
 
+Check the available commands and flags:
+
+![Aurel help command in a terminal](docs/screenshots/aurel-help.svg)
+
 Review the readiness score, prioritized fixes, and Starter PR Kit:
 
 ![Aurel contributor readiness report in a terminal](docs/screenshots/readiness-report.svg)
+
+Write reports for humans, CI, dashboards, or a local browser:
+
+![Aurel report output format commands](docs/screenshots/output-formats.svg)
+
+Customize checks with an `aurel.yml` file:
+
+![Aurel config file example](docs/screenshots/config-example.svg)
 
 ## Execution Troubleshooting
 

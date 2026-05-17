@@ -1,5 +1,9 @@
 # Sample Aurel Report
 
+This example shows the kind of plain terminal report a maintainer or beginner contributor can read after running Aurel. The screenshot gives a quick overview; the text block below is easier to copy into issues, pull requests, or docs.
+
+![Aurel contributor readiness report in a terminal](../docs/screenshots/readiness-report.svg)
+
 ```text
 Repository: github:owner/repo
 Detected Profile: Python project (Medium confidence)

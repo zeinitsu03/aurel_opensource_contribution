@@ -1,6 +1,15 @@
 # Contributing To Aurel
 
-Thanks for helping improve Aurel.
+This guide is for contributors who want to run Aurel locally, make a focused change, and open a pull request that maintainers can review quickly.
+
+## Quick Path
+
+1. Create and activate a virtual environment.
+2. Install Aurel in editable mode.
+3. Run `aurel start` to confirm the CLI works.
+4. Make one focused change.
+5. Run `python -m pytest`.
+6. Update docs or examples when user-facing behavior changes.
 
 ## Local Setup
 
@@ -30,6 +39,8 @@ aurel start
 
 Run `aurel start` after activating the environment to confirm the AUREL banner appears before using analysis commands.
 
+![Aurel startup banner in a terminal](docs/screenshots/aurel-start.svg)
+
 If PowerShell blocks activation scripts, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` or use `.\.venv\Scripts\python.exe -m pip install -e .`.
 
 If virtual environment creation fails during `ensurepip` with a temp-directory `PermissionError`, fix `%TEMP%` permissions or use a standard Python install from python.org before retrying.
@@ -55,6 +66,10 @@ aurel start
 aurel https://github.com/owner/repo
 ```
 
+Use `aurel --help` when you need to check available flags:
+
+![Aurel help command in a terminal](docs/screenshots/aurel-help.svg)
+
 Generate a Markdown report:
 
 ```bash
@@ -68,6 +83,8 @@ aurel https://github.com/owner/repo --format text --output reports/readiness.txt
 ```
 
 If the CLI reports `Could not reach remote provider`, the package launched correctly but the network could not reach the provider API. Check VPN, proxy, firewall, or GitHub rate limits before changing code.
+
+For report examples, see [examples/sample_report.md](examples/sample_report.md). For automation usage, see [docs/CI_USAGE.md](docs/CI_USAGE.md).
 
 ## Run Tests
 

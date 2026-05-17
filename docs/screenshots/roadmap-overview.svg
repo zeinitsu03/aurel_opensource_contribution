@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img" aria-labelledby="title desc">
+  <title id="title">Aurel roadmap overview</title>
+  <desc id="desc">A screenshot-style roadmap showing completed hardening, local advisor, workflow depth, v1.0 release readiness, and future analysis work.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .window-title { fill: #cbd5e1; font: 14px Consolas, "Courier New", monospace; }
+      .heading { fill: #facc15; font: 21px Consolas, "Courier New", monospace; }
+      .done { fill: #86efac; font: 19px Consolas, "Courier New", monospace; }
+      .next { fill: #93c5fd; font: 19px Consolas, "Courier New", monospace; }
+      .future { fill: #cbd5e1; font: 19px Consolas, "Courier New", monospace; }
+    </style>
+  </defs>
+  <rect width="1120" height="640" fill="#f6f8fb"/>
+  <rect x="40" y="32" width="1040" height="576" rx="8" fill="#0f172a" filter="url(#shadow)"/>
+  <path d="M48 32h1024a8 8 0 0 1 8 8v34H40V40a8 8 0 0 1 8-8z" fill="#111827"/>
+  <circle cx="70" cy="53" r="7" fill="#f87171"/>
+  <circle cx="94" cy="53" r="7" fill="#fbbf24"/>
+  <circle cx="118" cy="53" r="7" fill="#34d399"/>
+  <text x="560" y="59" text-anchor="middle" class="window-title">ROADMAP.md</text>
+
+  <text x="72" y="126" class="heading">Aurel roadmap at a glance</text>
+  <text x="96" y="190" class="done">v0.6  Security and provider hardening</text>
+  <text x="96" y="236" class="done">v0.7  Stronger deterministic local advisor</text>
+  <text x="96" y="282" class="done">v0.8  Contribution workflow and issue depth</text>
+  <text x="96" y="328" class="next">v1.0  Configurable rules, reports, CI, and release readiness</text>
+  <text x="96" y="374" class="future">v1.1  Deeper ecosystem command and documentation analysis</text>
+  <text x="96" y="420" class="future">v1.2  Provider-specific maintainer and issue quality signals</text>
+  <text x="96" y="500" class="heading">Default rule: transparent deterministic analysis stays free.</text>
+</svg>

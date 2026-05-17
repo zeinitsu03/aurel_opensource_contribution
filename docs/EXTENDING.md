@@ -2,6 +2,10 @@
 
 This guide explains where to add common v1.0 extension work. Keep changes deterministic, evidence-backed, and covered by tests.
 
+Use this page when you know what kind of behavior you want to add but need to find the right source file and test file.
+
+![Aurel extension workflow](screenshots/extension-flow.svg)
+
 ## Add A Provider
 
 - Parse the URL shape in `aurel/parser.py`.

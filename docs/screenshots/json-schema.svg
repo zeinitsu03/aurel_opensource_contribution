@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="680" viewBox="0 0 1120 680" role="img" aria-labelledby="title desc">
+  <title id="title">Aurel JSON report structure</title>
+  <desc id="desc">A terminal screenshot showing the main top-level fields in an Aurel JSON report.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .window-title { fill: #cbd5e1; font: 14px Consolas, "Courier New", monospace; }
+      .prompt { fill: #38bdf8; font: 18px Consolas, "Courier New", monospace; }
+      .command { fill: #f8fafc; }
+      .json { fill: #cbd5e1; font: 19px Consolas, "Courier New", monospace; }
+      .key { fill: #93c5fd; }
+      .value { fill: #86efac; }
+      .muted { fill: #94a3b8; }
+    </style>
+  </defs>
+  <rect width="1120" height="680" fill="#f6f8fb"/>
+  <rect x="40" y="32" width="1040" height="616" rx="8" fill="#0f172a" filter="url(#shadow)"/>
+  <path d="M48 32h1024a8 8 0 0 1 8 8v34H40V40a8 8 0 0 1 8-8z" fill="#111827"/>
+  <circle cx="70" cy="53" r="7" fill="#f87171"/>
+  <circle cx="94" cy="53" r="7" fill="#fbbf24"/>
+  <circle cx="118" cy="53" r="7" fill="#34d399"/>
+  <text x="560" y="59" text-anchor="middle" class="window-title">Aurel JSON report</text>
+
+  <text x="72" y="116" class="prompt">$ <tspan class="command">aurel https://github.com/owner/repo --format json</tspan></text>
+  <text x="72" y="170" class="json">{</text>
+  <text x="96" y="202" class="json"><tspan class="key">"schema_version"</tspan>: <tspan class="value">"1.0"</tspan>,</text>
+  <text x="96" y="234" class="json"><tspan class="key">"aurel_version"</tspan>: <tspan class="value">"1.0.0"</tspan>,</text>
+  <text x="96" y="266" class="json"><tspan class="key">"repository"</tspan>: { <tspan class="muted">provider, owner, repo, display_name</tspan> },</text>
+  <text x="96" y="298" class="json"><tspan class="key">"profile"</tspan>: { <tspan class="muted">name, confidence, evidence</tspan> },</text>
+  <text x="96" y="330" class="json"><tspan class="key">"score"</tspan>: { <tspan class="muted">value, label, categories, caps</tspan> },</text>
+  <text x="96" y="362" class="json"><tspan class="key">"issue_readiness"</tspan>: { <tspan class="muted">counts, labels, quality_notes</tspan> },</text>
+  <text x="96" y="394" class="json"><tspan class="key">"workflow_readiness"</tspan>: { <tspan class="muted">issue and PR templates</tspan> },</text>
+  <text x="96" y="426" class="json"><tspan class="key">"findings"</tspan>: [ { <tspan class="key">"id"</tspan>, <tspan class="key">"severity"</tspan>, <tspan class="key">"evidence"</tspan> } ],</text>
+  <text x="96" y="458" class="json"><tspan class="key">"recommendations"</tspan>: [ { <tspan class="key">"id"</tspan>, <tspan class="key">"effort"</tspan>, <tspan class="key">"gain"</tspan> } ],</text>
+  <text x="96" y="490" class="json"><tspan class="key">"starter_pr_kit"</tspan>: { <tspan class="muted">title, commit message, checklist</tspan> },</text>
+  <text x="96" y="522" class="json"><tspan class="key">"backlog"</tspan>: [ ... ],</text>
+  <text x="96" y="554" class="json"><tspan class="key">"onboarding_plan"</tspan>: { <tspan class="muted">read_first, run_first, change_first</tspan> }</text>
+  <text x="72" y="586" class="json">}</text>
+</svg>

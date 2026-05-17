@@ -2,6 +2,10 @@
 
 Aurel v1.0 JSON reports use `schema_version: "1.0"`. Additive fields may be introduced in later minor versions, but existing field names and meanings should remain stable for v1.x automation.
 
+Use this page when you are writing CI checks, dashboards, comparison scripts, or any tool that reads `--format json` output.
+
+![Aurel JSON report structure](screenshots/json-schema.svg)
+
 ## Top-Level Fields
 
 - `schema_version`: report schema version.

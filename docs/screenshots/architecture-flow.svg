@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="650" viewBox="0 0 1120 650" role="img" aria-labelledby="title desc">
+  <title id="title">Aurel analysis pipeline</title>
+  <desc id="desc">A visual screenshot-style diagram showing Aurel's repository analysis pipeline from URL to reports.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .window-title { fill: #cbd5e1; font: 14px Consolas, "Courier New", monospace; }
+      .step { fill: #f8fafc; font: 20px Consolas, "Courier New", monospace; }
+      .arrow { fill: #38bdf8; font: 20px Consolas, "Courier New", monospace; }
+      .caption { fill: #cbd5e1; font: 18px Consolas, "Courier New", monospace; }
+    </style>
+  </defs>
+  <rect width="1120" height="650" fill="#f6f8fb"/>
+  <rect x="40" y="32" width="1040" height="586" rx="8" fill="#0f172a" filter="url(#shadow)"/>
+  <path d="M48 32h1024a8 8 0 0 1 8 8v34H40V40a8 8 0 0 1 8-8z" fill="#111827"/>
+  <circle cx="70" cy="53" r="7" fill="#f87171"/>
+  <circle cx="94" cy="53" r="7" fill="#fbbf24"/>
+  <circle cx="118" cy="53" r="7" fill="#34d399"/>
+  <text x="560" y="59" text-anchor="middle" class="window-title">Aurel analysis pipeline</text>
+
+  <text x="72" y="126" class="caption">Aurel reads metadata and docs. It does not run code from the target repository.</text>
+  <text x="96" y="198" class="step">repository URL</text>
+  <text x="330" y="198" class="arrow">-&gt;</text>
+  <text x="394" y="198" class="step">parser</text>
+  <text x="530" y="198" class="arrow">-&gt;</text>
+  <text x="594" y="198" class="step">provider</text>
+  <text x="760" y="198" class="arrow">-&gt;</text>
+  <text x="824" y="198" class="step">repository data</text>
+
+  <text x="96" y="294" class="step">profiles</text>
+  <text x="270" y="294" class="arrow">+</text>
+  <text x="322" y="294" class="step">signals</text>
+  <text x="476" y="294" class="arrow">+</text>
+  <text x="528" y="294" class="step">workflow templates</text>
+  <text x="836" y="294" class="arrow">+</text>
+  <text x="888" y="294" class="step">issues</text>
+
+  <text x="206" y="390" class="arrow">-&gt;</text>
+  <text x="270" y="390" class="step">findings</text>
+  <text x="458" y="390" class="arrow">-&gt;</text>
+  <text x="522" y="390" class="step">score and caps</text>
+  <text x="778" y="390" class="arrow">-&gt;</text>
+  <text x="842" y="390" class="step">advisor</text>
+
+  <text x="214" y="500" class="step">terminal</text>
+  <text x="378" y="500" class="arrow">|</text>
+  <text x="430" y="500" class="step">text</text>
+  <text x="526" y="500" class="arrow">|</text>
+  <text x="578" y="500" class="step">Markdown</text>
+  <text x="750" y="500" class="arrow">|</text>
+  <text x="802" y="500" class="step">JSON</text>
+  <text x="900" y="500" class="arrow">|</text>
+  <text x="952" y="500" class="step">HTML</text>
+</svg>
