@@ -155,6 +155,16 @@ aurel https://github.com/owner/repo --github-token YOUR_TOKEN
 
 The token is optional. Public repositories can be analyzed without one, but GitHub may rate-limit unauthenticated requests more quickly. Aurel only sends this token to GitHub requests.
 
+## Screenshots
+
+Start Aurel and verify the CLI entry point:
+
+![Aurel startup banner in a terminal](docs/screenshots/aurel-start.svg)
+
+Review the readiness score, prioritized fixes, and Starter PR Kit:
+
+![Aurel contributor readiness report in a terminal](docs/screenshots/readiness-report.svg)
+
 ## Execution Troubleshooting
 
 If `aurel` prints help, the installed command is working.
