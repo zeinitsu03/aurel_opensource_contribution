@@ -11,6 +11,18 @@ This guide is for contributors who want to run Aurel locally, make a focused cha
 5. Run `python -m pytest`.
 6. Update docs or examples when user-facing behavior changes.
 
+## Branch And Pull Request Flow
+
+Create a short-lived branch for each focused change:
+
+```bash
+git switch -c docs/clarify-setup
+```
+
+Commit with one of the project prefixes from [Commit Style](#commit-style), then push the branch and open a pull request against `main`. Keep the pull request description short: explain what changed, why it helps contributors, and how you checked it.
+
+After the pull request is merged, delete the branch unless you need it for follow-up work.
+
 ## Local Setup
 
 Clone the repository, create a virtual environment, then activate it before installing dependencies.
