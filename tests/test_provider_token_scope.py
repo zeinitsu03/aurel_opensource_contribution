@@ -1,7 +1,7 @@
+from aurel import providers
 from aurel.analyzer import analyze_repository
 from aurel.config import AurelConfig
 from aurel.models import Repository
-from aurel import providers
 
 
 class FakeResponse:

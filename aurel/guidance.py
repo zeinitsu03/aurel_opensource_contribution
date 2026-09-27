@@ -13,7 +13,6 @@ from aurel.models import (
     StarterPrKit,
 )
 
-
 SUGGESTION_PRIORITY = (
     "contributing",
     "readme",

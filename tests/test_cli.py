@@ -3,12 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from aurel import cli
 from aurel import __main__ as package_main
+from aurel import cli
+from aurel.analyzer import analyze_repository
 from aurel.config import AurelConfig
 from aurel.models import IssueReadiness, Repository
-from aurel.analyzer import analyze_repository
-
 
 TEST_ARTIFACTS = Path(".test_artifacts")
 

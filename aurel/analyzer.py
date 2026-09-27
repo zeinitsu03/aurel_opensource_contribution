@@ -32,7 +32,6 @@ from aurel.providers import (
 from aurel.scorer import calculate_score
 from aurel.workflow import analyze_workflow_readiness
 
-
 FileExistsFunc = Callable[[Repository, str], bool]
 FileContentFunc = Callable[[Repository, str], str | None]
 IssueReadinessFunc = Callable[[Repository], IssueReadiness]
@@ -661,9 +660,7 @@ def _required_commands_for_profile(
         required.update(("install", "run", "test", "build"))
     elif "java project" in normalized:
         required.update(("install", "test", "build"))
-    elif "go project" in normalized:
-        required.update(("test", "build"))
-    elif "rust" in normalized:
+    elif "go project" in normalized or "rust" in normalized:
         required.update(("test", "build"))
     elif "c or c++" in normalized:
         required.update(("build", "test"))

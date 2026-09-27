@@ -11,7 +11,6 @@ from typing import Protocol
 
 from aurel.models import CommunitySignal, Finding, IssueReadiness, Recommendation, ScoreResult
 
-
 TARGET_EXCELLENT_SCORE = 90
 DEDICATED_RECOMMENDATION_FINDINGS = {
     "Project overview or docs entry point not detected",

@@ -154,11 +154,15 @@ def format_html_report(analysis: AnalysisResult) -> str:
             "<body>",
             "<h1>Aurel Contributor Readiness Report</h1>",
             f"<p class=\"muted\">Repository: {html.escape(data['repository']['display_name'])}</p>",
-            f"<p class=\"score\">{score['value']}/{score['max_value']} "
-            f"({score['percentage']}%)</p>",
+            (
+                f"<p class=\"score\">{score['value']}/{score['max_value']} "
+                f"({score['percentage']}%)</p>"
+            ),
             f"<p>Label: <strong>{html.escape(score['label'])}</strong></p>",
-            f"<p>Profile: <strong>{html.escape(data['profile']['name'])}</strong> "
-            f"({html.escape(data['profile']['confidence'])} confidence)</p>",
+            (
+                f"<p>Profile: <strong>{html.escape(data['profile']['name'])}</strong> "
+                f"({html.escape(data['profile']['confidence'])} confidence)</p>"
+            ),
             "<h2>Score Categories</h2>",
             _html_table(
                 ("Category", "Score"),
@@ -203,8 +207,10 @@ def format_html_report(analysis: AnalysisResult) -> str:
             ),
             "<h2>Starter PR Kit</h2>",
             f"<p>{html.escape(data['starter_pr_kit']['contribution'])}</p>",
-            f"<p><strong>PR title:</strong> "
-            f"{html.escape(data['starter_pr_kit']['pr_title'])}</p>",
+            (
+                f"<p><strong>PR title:</strong> "
+                f"{html.escape(data['starter_pr_kit']['pr_title'])}</p>"
+            ),
             "</body>",
             "</html>",
         ]
@@ -639,8 +645,10 @@ def _comparison_lines(
     added = sorted(set(current_items) - set(previous_items))
     resolved = sorted(set(previous_items) - set(current_items))
     lines = [
-        f"- {label}: {len(previous_items)} -> {len(current_items)} "
-        f"({len(added)} new, {len(resolved)} resolved)"
+        (
+            f"- {label}: {len(previous_items)} -> {len(current_items)} "
+            f"({len(added)} new, {len(resolved)} resolved)"
+        )
     ]
     for item_id in added[:3]:
         lines.append(f"  - New: {current_items[item_id]}")
