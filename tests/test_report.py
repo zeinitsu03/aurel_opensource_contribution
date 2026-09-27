@@ -44,7 +44,7 @@ def test_summary_report_shows_score_top_fixes_and_first_pr():
 
     assert report.startswith("Repository: github:owner/repo")
     assert "Score: 58/100 - Needs improvement" in report
-    assert "Held back by:" in report
+    assert "Biggest blocker:" in report
     assert "Top fixes:\n1. " in report
     assert f"- PR title: {analysis.starter_pr_kit.pr_title}" in report
     assert "Note: test skipped issue readiness" in report

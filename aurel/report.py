@@ -276,7 +276,10 @@ def format_summary_report(analysis: AnalysisResult) -> str:
     ]
     if score.applied_cap:
         reason = score.applied_cap.reason.rstrip(".")
-        lines.append(f"Held back by: {reason} (max {score.applied_cap.limit})")
+        lines.append(
+            f"Biggest blocker: {reason} (score can't exceed {score.applied_cap.limit} "
+            "until fixed)"
+        )
 
     lines.extend(["", "Top fixes:"])
     shown = analysis.recommendations[:SUMMARY_TOP_FIXES]
@@ -611,6 +614,7 @@ def _recommendation_to_dict(recommendation) -> dict[str, Any]:
         "estimated_score_gain": recommendation.estimated_score_gain,
         "evidence": _evidence_items(recommendation.evidence),
         "source": recommendation.source,
+        "score_cap": recommendation.score_cap,
     }
 
 

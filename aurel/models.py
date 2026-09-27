@@ -192,6 +192,7 @@ class Recommendation:
     estimated_score_gain: int
     evidence: tuple[str, ...]
     source: str
+    score_cap: int | None = None
 
 
 @dataclass(frozen=True)

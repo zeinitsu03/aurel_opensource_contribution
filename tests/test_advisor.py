@@ -71,6 +71,62 @@ def test_advisor_does_not_repeat_dedicated_issue_recommendation():
     assert "Beginner-friendly issue path not detected" not in titles
 
 
+def test_advisor_ranks_fix_for_strictest_score_cap_first():
+    install_finding = Finding(
+        title="Install command is not obvious from the README",
+        detail="Contributors cannot find the install step.",
+        recommendation="Add the install command.",
+        severity="Medium",
+        confidence="Medium",
+        evidence=("README.md",),
+        category="Setup & Testing Clarity",
+        score_cap=80,
+    )
+    security_finding = Finding(
+        title="Security reporting instructions not detected",
+        detail="No security policy.",
+        recommendation="Add a security policy.",
+        severity="Low",
+        confidence="Medium",
+        evidence=("security.md",),
+        category="Community & Safety",
+        score_cap=89,
+    )
+
+    recommendations = build_recommendations(
+        signals=(_signal("readme", True, 25), _signal("security", False, 15)),
+        findings=(security_finding, install_finding),
+        issue_readiness=_issue_readiness(2),
+        score=ScoreResult(value=56, max_value=100, label="Needs improvement"),
+    )
+
+    assert recommendations[0].title == "Install command is not obvious from the README"
+    assert recommendations[0].score_cap == 80
+    assert recommendations[1].title == "Add security reporting instructions"
+    assert recommendations[1].score_cap == 89
+
+
+def test_advisor_treats_high_severity_finding_as_capped():
+    finding = Finding(
+        title="README appears to contain placeholder text",
+        detail="Placeholder text found.",
+        recommendation="Replace the placeholder text.",
+        severity="High",
+        confidence="High",
+        evidence=("README.md",),
+        category="Documentation Quality",
+    )
+
+    recommendations = build_recommendations(
+        signals=(_signal("readme", True, 25),),
+        findings=(finding,),
+        issue_readiness=_issue_readiness(2),
+        score=ScoreResult(value=80, max_value=100, label="Good for beginners"),
+    )
+
+    assert recommendations[0].score_cap == 89
+
+
 def _signal(key, present, weight):
     return CommunitySignal(
         key=key,
@@ -78,6 +134,7 @@ def _signal(key, present, weight):
             "readme": "Project overview or docs entry point",
             "contributing": "Contribution guide",
             "license": "License information",
+            "security": "Security reporting instructions",
         }.get(key, key),
         present=present,
         required=True,

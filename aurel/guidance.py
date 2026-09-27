@@ -13,6 +13,30 @@ from aurel.models import (
     StarterPrKit,
 )
 
+# Findings a contributor cannot fix with a pull request: they need a maintainer
+# to label or edit issues, so they never become the Starter PR Kit.
+MAINTAINER_ONLY_FINDING_CATEGORIES = {"Issue Readiness"}
+
+# Action-style titles, so suggestions describe the change rather than the problem.
+FINDING_CHANGE_TITLES = {
+    "README looks very short": "docs: expand README for new contributors",
+    "README appears to contain placeholder text": "docs: replace README placeholder text",
+    "Setup path is not obvious from the README": "docs: add setup steps to README",
+    "Install command is not obvious from the README": "docs: add install command to README",
+    "Usage example is not obvious from the README": "docs: add usage example to README",
+    "Local run command is not obvious from the README": "docs: add local run command to README",
+    "Testing instructions are not obvious from the README": (
+        "docs: add testing instructions to README"
+    ),
+    "Test command is not obvious from the README": "docs: add test command to README",
+    "Lint command is not obvious from the README": "docs: add lint command to README",
+    "Build command is not obvious from the README": "docs: add build command to README",
+    "Issue templates not detected": "docs: add issue templates",
+    "Pull request template not detected": "docs: add pull request template",
+    "Beginner-friendly issue path not detected": "Label a few small issues for beginners",
+    "Beginner issue details look too thin": "Add context to beginner-labeled issues",
+}
+
 SUGGESTION_PRIORITY = (
     "contributing",
     "readme",
@@ -224,18 +248,36 @@ def build_starter_pr_kit(
         if not signal_results.get(signal, False):
             return STARTER_PR_KITS[signal]
 
-    if findings:
-        finding = findings[0]
+    finding = _first_pull_request_finding(findings)
+    if finding:
+        title = _pr_title_from_finding(finding)
         return StarterPrKit(
             contribution=finding.recommendation,
             reason=finding.detail,
-            pr_title=_pr_title_from_finding(finding),
-            commit_message="docs: improve contributor guidance",
+            pr_title=title,
+            commit_message=title,
             checklist=QUALITY_FINDING_KIT.checklist,
             confidence=finding.confidence,
         )
 
     return DEFAULT_STARTER_PR_KIT
+
+
+def _first_pull_request_finding(findings: tuple[Finding, ...]) -> Finding | None:
+    """Return the finding with the strictest score cap that a PR can fix."""
+
+    candidates = [
+        finding
+        for finding in findings
+        if finding.category not in MAINTAINER_ONLY_FINDING_CATEGORIES
+    ]
+    if not candidates:
+        return None
+    no_cap = 101
+    return min(
+        candidates,
+        key=lambda finding: finding.score_cap if finding.score_cap is not None else no_cap,
+    )
 
 
 def build_improvement_backlog(
@@ -369,8 +411,9 @@ def _change_first(
     starter_pr_kit: StarterPrKit,
 ) -> tuple[str, ...]:
     items = [starter_pr_kit.contribution]
-    if findings:
-        items.append(f"Start with this report finding: {findings[0].title}.")
+    finding = _first_pull_request_finding(findings)
+    if finding:
+        items.append(f"Start with this report finding: {finding.title}.")
     items.append("Keep the first pull request small, documented, and easy to review.")
     return tuple(items)
 
@@ -383,8 +426,10 @@ def _signal(signals: tuple[CommunitySignal, ...], key: str) -> CommunitySignal |
 
 
 def _pr_title_from_finding(finding: Finding) -> str:
+    if finding.title in FINDING_CHANGE_TITLES:
+        return FINDING_CHANGE_TITLES[finding.title]
     title = finding.title.lower().replace("readme", "README")
-    return f"docs: {title}"
+    return f"docs: address {title}"
 
 
 def _backlog_item_from_finding(finding: Finding) -> BacklogItem:

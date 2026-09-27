@@ -139,6 +139,55 @@ def test_starter_pr_kit_suggests_setup_docs_when_no_files_are_missing():
     assert kit.pr_title == "docs: clarify setup steps for new contributors"
 
 
+ALL_FILES_PRESENT = {
+    "README.md": True,
+    "LICENSE": True,
+    "CONTRIBUTING.md": True,
+    "SECURITY.md": True,
+    "CODE_OF_CONDUCT.md": True,
+}
+
+
+def test_starter_pr_kit_skips_findings_only_maintainers_can_fix():
+    issue_finding = _finding(
+        "Beginner-friendly issue path not detected", "Issue Readiness", 89
+    )
+
+    kit = build_starter_pr_kit(ALL_FILES_PRESENT, (issue_finding,))
+
+    assert kit.pr_title == "docs: clarify setup steps for new contributors"
+    assert "Label" not in kit.contribution
+
+
+def test_starter_pr_kit_uses_action_title_for_strictest_fixable_finding():
+    findings = (
+        _finding("Beginner-friendly issue path not detected", "Issue Readiness", 89),
+        _finding("Test command is not obvious from the README", "Setup & Testing Clarity", 85),
+        _finding(
+            "Install command is not obvious from the README", "Setup & Testing Clarity", 80
+        ),
+    )
+
+    kit = build_starter_pr_kit(ALL_FILES_PRESENT, findings)
+
+    assert kit.pr_title == "docs: add install command to README"
+    assert kit.commit_message == "docs: add install command to README"
+    assert kit.contribution == "Fix: Install command is not obvious from the README"
+
+
+def _finding(title, category, score_cap):
+    return Finding(
+        title=title,
+        detail=f"Detail: {title}",
+        recommendation=f"Fix: {title}",
+        severity="Medium",
+        confidence="Medium",
+        evidence=("README.md",),
+        category=category,
+        score_cap=score_cap,
+    )
+
+
 def _signal(key, present, weight):
     return CommunitySignal(
         key=key,

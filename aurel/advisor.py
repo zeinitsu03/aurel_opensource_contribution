@@ -12,13 +12,15 @@ from typing import Protocol
 from aurel.models import CommunitySignal, Finding, IssueReadiness, Recommendation, ScoreResult
 
 TARGET_EXCELLENT_SCORE = 90
+HIGH_SEVERITY_CAP = 89
+BEGINNER_ISSUE_FINDING = "Beginner-friendly issue path not detected"
 DEDICATED_RECOMMENDATION_FINDINGS = {
     "Project overview or docs entry point not detected",
     "License information not detected",
     "Contribution guide not detected",
     "Security reporting instructions not detected",
     "Community behavior expectations not detected",
-    "Beginner-friendly issue path not detected",
+    BEGINNER_ISSUE_FINDING,
 }
 
 
@@ -45,10 +47,11 @@ class DeterministicAdvisor:
         issue_readiness: IssueReadiness,
         score: ScoreResult,
     ) -> tuple[Recommendation, ...]:
+        caps_by_finding = {finding.title: _effective_cap(finding) for finding in findings}
         recommendations: list[Recommendation] = []
-        recommendations.extend(_missing_signal_recommendations(signals))
+        recommendations.extend(_missing_signal_recommendations(signals, caps_by_finding))
         recommendations.extend(_finding_recommendations(findings))
-        recommendations.extend(_issue_recommendations(issue_readiness))
+        recommendations.extend(_issue_recommendations(issue_readiness, caps_by_finding))
 
         if score.value >= TARGET_EXCELLENT_SCORE and not recommendations:
             return (
@@ -89,6 +92,7 @@ def build_recommendations(
 
 def _missing_signal_recommendations(
     signals: tuple[CommunitySignal, ...],
+    caps_by_finding: dict[str, int | None],
 ) -> tuple[Recommendation, ...]:
     recommendations: list[Recommendation] = []
     for signal in signals:
@@ -105,6 +109,7 @@ def _missing_signal_recommendations(
                 estimated_score_gain=signal.weight,
                 evidence=signal.searched_paths,
                 source="missing-signal",
+                score_cap=caps_by_finding.get(f"{signal.label} not detected"),
             )
         )
     return tuple(recommendations)
@@ -126,12 +131,16 @@ def _finding_recommendations(findings: tuple[Finding, ...]) -> tuple[Recommendat
                 estimated_score_gain=_estimated_gain_for_finding(finding),
                 evidence=finding.evidence,
                 source="finding",
+                score_cap=_effective_cap(finding),
             )
         )
     return tuple(recommendations)
 
 
-def _issue_recommendations(issue_readiness: IssueReadiness) -> tuple[Recommendation, ...]:
+def _issue_recommendations(
+    issue_readiness: IssueReadiness,
+    caps_by_finding: dict[str, int | None],
+) -> tuple[Recommendation, ...]:
     if not issue_readiness.checked or issue_readiness.beginner_issue_count > 0:
         return ()
 
@@ -152,6 +161,7 @@ def _issue_recommendations(issue_readiness: IssueReadiness) -> tuple[Recommendat
             estimated_score_gain=11,
             evidence=labels,
             source="issue-readiness",
+            score_cap=caps_by_finding.get(BEGINNER_ISSUE_FINDING),
         ),
     )
 
@@ -173,6 +183,15 @@ def _missing_signal_action(key: str) -> str:
         ),
     }
     return actions.get(key, "Document this contributor-readiness signal.")
+
+
+def _effective_cap(finding: Finding) -> int | None:
+    """Return the strictest score cap this finding places on the score."""
+
+    caps = [finding.score_cap] if finding.score_cap is not None else []
+    if finding.severity == "High":
+        caps.append(HIGH_SEVERITY_CAP)
+    return min(caps, default=None)
 
 
 def _effort_for_finding(finding: Finding) -> str:
@@ -221,11 +240,19 @@ def _top_ranked(
     recommendations: tuple[Recommendation, ...],
     limit: int,
 ) -> tuple[Recommendation, ...]:
+    """Rank fixes so the one lifting the strictest score cap comes first.
+
+    The score can never exceed its strictest cap, so fixing anything else first
+    would not move the score. Priority and estimated gain break ties.
+    """
+
     priority_rank = {"High": 0, "Medium": 1, "Low": 2, "Info": 3}
+    no_cap = 101
     return tuple(
         sorted(
             recommendations,
             key=lambda item: (
+                item.score_cap if item.score_cap is not None else no_cap,
                 priority_rank.get(item.priority, 4),
                 -item.estimated_score_gain,
                 item.effort,
