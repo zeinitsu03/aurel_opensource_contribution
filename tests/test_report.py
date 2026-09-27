@@ -9,6 +9,7 @@ from aurel.report import (
     format_json_report,
     format_markdown_report,
     format_report_comparison,
+    format_summary_report,
     format_terminal_report,
     format_text_report,
 )
@@ -34,6 +35,32 @@ def test_terminal_report_includes_backlog_and_score():
     assert "Program Organizer Notes:" in report
     assert "Acceptance:" in report
     assert "docs: add contributing guide" in report
+
+
+def test_summary_report_shows_score_top_fixes_and_first_pr():
+    analysis = _analysis()
+
+    report = format_summary_report(analysis)
+
+    assert report.startswith("Repository: github:owner/repo")
+    assert "Score: 58/100 - Needs improvement" in report
+    assert "Held back by:" in report
+    assert "Top fixes:\n1. " in report
+    assert f"- PR title: {analysis.starter_pr_kit.pr_title}" in report
+    assert "Note: test skipped issue readiness" in report
+    assert "Findings:" not in report
+    assert "Improvement Backlog:" not in report
+
+
+def test_summary_report_limits_top_fixes_and_points_to_detailed():
+    analysis = _analysis(found={"pyproject.toml"})
+    assert len(analysis.recommendations) > 3
+
+    report = format_summary_report(analysis)
+
+    assert "\n3. " in report
+    assert "\n4. " not in report
+    assert f"...and {len(analysis.recommendations) - 3} more with --detailed" in report
 
 
 def test_text_report_is_plain_text_document():

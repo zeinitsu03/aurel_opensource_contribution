@@ -261,8 +261,66 @@ def format_text_report(analysis: AnalysisResult) -> str:
     return format_terminal_report(analysis)
 
 
+SUMMARY_TOP_FIXES = 3
+
+
+def format_summary_report(analysis: AnalysisResult) -> str:
+    """Build the short default terminal report: score, top fixes, first PR."""
+
+    score = analysis.score
+    lines = [
+        f"Repository: {analysis.repository.display_name}",
+        f"Profile: {analysis.profile.name} ({analysis.profile.confidence} confidence)",
+        "",
+        f"Score: {score.value}/{score.max_value} - {score.label}",
+    ]
+    if score.applied_cap:
+        reason = score.applied_cap.reason.rstrip(".")
+        lines.append(f"Held back by: {reason} (max {score.applied_cap.limit})")
+
+    lines.extend(["", "Top fixes:"])
+    shown = analysis.recommendations[:SUMMARY_TOP_FIXES]
+    if shown:
+        for index, item in enumerate(shown, start=1):
+            lines.append(
+                f"{index}. {item.title} (+{item.estimated_score_gain}, {item.priority} priority)"
+            )
+            lines.append(f"   {item.action}")
+        hidden = len(analysis.recommendations) - len(shown)
+        if hidden:
+            lines.append(f"   ...and {hidden} more with --detailed")
+    else:
+        lines.append("- No priority fixes suggested")
+
+    kit = analysis.starter_pr_kit
+    lines.extend(
+        [
+            "",
+            "Your first contribution:",
+            f"- Change: {kit.contribution}",
+            f"- Why: {kit.reason}",
+            f"- PR title: {kit.pr_title}",
+            f"- Commit message: {kit.commit_message}",
+        ]
+    )
+
+    if not analysis.issue_readiness.checked:
+        lines.extend(["", f"Note: {analysis.issue_readiness.note}"])
+
+    lines.extend(
+        [
+            "",
+            (
+                "Run again with --detailed for findings, the onboarding path, backlog, "
+                "and maintainer notes."
+            ),
+        ]
+    )
+    return "\n".join(lines)
+
+
 def format_terminal_report(analysis: AnalysisResult) -> str:
-    """Build a simple terminal report for the CLI."""
+    """Build the full terminal report for the CLI (shown with --detailed)."""
 
     lines = [
         f"Repository: {analysis.repository.display_name}",

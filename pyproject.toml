@@ -3,7 +3,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aurel"
+name = "aurel-oss"
 version = "1.0.0"
 description = "Contributor Readiness CLI for beginner open-source contributors"
 readme = "README.md"
@@ -26,6 +26,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Quality Assurance"
 ]
+
+[project.urls]
+Homepage = "https://github.com/zeinitsu03/aurel_opensource_contribution"
+Issues = "https://github.com/zeinitsu03/aurel_opensource_contribution/issues"
 
 [project.scripts]
 aurel = "aurel.cli:main"

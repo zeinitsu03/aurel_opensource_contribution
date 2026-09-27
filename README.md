@@ -63,59 +63,47 @@ Can a contributor understand this repository well enough to make a useful first 
 
 ## Installation
 
-For local development on Windows PowerShell:
+Aurel needs Python 3.10 or newer.
 
-```powershell
-py -3 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -e .
-python -m pip install -r requirements.txt
-aurel start
-```
-
-The `start` command prints the AUREL ASCII banner and confirms the CLI entry point is ready.
-
-If PowerShell blocks activation scripts, either allow local scripts for your user or run commands through the virtual environment's Python directly:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-.\.venv\Scripts\python.exe -m pip install -e .
-```
-
-For local development on macOS or Linux:
+Install it with [pipx](https://pipx.pypa.io), which puts the `aurel` command on your PATH in its own isolated environment:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
-python -m pip install -r requirements.txt
-aurel start
+pipx install git+https://github.com/zeinitsu03/aurel_opensource_contribution.git
+aurel
 ```
+
+Don't have pipx? Install it once, then open a new terminal:
+
+```bash
+python -m pip install --user pipx
+python -m pipx ensurepath
+```
+
+Prefer plain pip? Install into an activated virtual environment instead:
+
+```bash
+python -m pip install git+https://github.com/zeinitsu03/aurel_opensource_contribution.git
+```
+
+To upgrade later, run `pipx upgrade aurel-oss` (or repeat the pip command with `--upgrade`).
+
+Want to change Aurel itself? Follow the development setup in [CONTRIBUTING.md](CONTRIBUTING.md#local-setup).
 
 ## Usage
 
-Activate the environment first in every new terminal session:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-aurel start
-```
-
-Preferred syntax:
-
-```bash
-aurel [repo link] --output [filename.txt]
-```
-
-Then run an analysis:
+Running `aurel` on its own prints a short getting-started guide. To analyze a repository:
 
 ```bash
 aurel https://github.com/owner/repo
 ```
 
-Terminal runs show an AUREL startup banner before the report. Machine-readable formats such as `--format json` do not include the banner, so CI and dashboards can parse output safely.
+By default the terminal shows a short summary: the score, what is holding it back, the top three fixes, and a suggested first contribution. Add `--detailed` for the full report with findings, the newcomer onboarding path, the improvement backlog, and maintainer notes:
+
+```bash
+aurel https://github.com/owner/repo --detailed
+```
+
+Terminal runs show an AUREL startup banner before the report. Machine-readable formats such as `--format json` do not include the banner, so CI and dashboards can parse output safely. Saved reports (`--output`) and non-terminal formats always contain the full report.
 
 Write a plain text report document:
 
@@ -194,19 +182,9 @@ Customize checks with an `aurel.yml` file:
 
 ## Execution Troubleshooting
 
-If `aurel` prints help, the installed command is working.
+If `aurel --version` prints a version, the installed command is working.
 
-```bash
-aurel --help
-aurel start
-```
-
-If `aurel` is not recognized on Windows, the package is not installed in the active environment. Activate `.venv`, then run:
-
-```powershell
-python -m pip install -e .
-aurel --help
-```
+If `aurel` is not recognized after `pipx install`, run `python -m pipx ensurepath` and open a new terminal. If you installed with pip into a virtual environment, activate that environment first.
 
 If you installed outside a virtual environment and pip says `aurel.exe` was installed in a user `Scripts` directory that is not on `PATH`, either activate a virtual environment and reinstall, or add that Scripts directory to your Windows user `PATH`. For the current PowerShell session, you can test the path like this:
 
@@ -223,6 +201,36 @@ If you see `Could not reach remote provider`, the CLI started correctly but coul
 If GitHub returns `403`, you may be rate-limited. Set `GITHUB_TOKEN` or pass `--github-token`; Aurel only sends that token to GitHub requests.
 
 ## Example Output
+
+Default summary:
+
+```text
+Repository: github:owner/repo
+Profile: Python project (Medium confidence)
+
+Score: 58/100 - Needs improvement
+Held back by: No contribution workflow guidance was detected (max 75)
+
+Top fixes:
+1. Add contribution guide (+20, High priority)
+   Add contributor instructions covering setup, tests, branch naming, review expectations, and first PR guidance.
+2. Add security reporting instructions (+15, Medium priority)
+   Add responsible disclosure instructions or a security contact path.
+3. Add community behavior expectations (+10, Medium priority)
+   Add community behavior expectations if the project accepts external contributors.
+   ...and 2 more with --detailed
+
+Your first contribution:
+- Change: Add or improve contributor instructions with setup, branch naming, testing steps, and pull request guidelines.
+- Why: A clear contributing guide helps new developers understand how to make their first change without guessing the workflow.
+- PR title: docs: add contributing guide for new contributors
+- Commit message: docs: add CONTRIBUTING guide
+
+Run again with --detailed for findings, the onboarding path, backlog, and maintainer notes.
+```
+
+<details>
+<summary>Full report with <code>--detailed</code></summary>
 
 ```text
 Repository: github:owner/repo
@@ -300,6 +308,8 @@ Program Organizer Notes:
 - Use this repository cautiously for cohorts until the high-priority readiness gaps are addressed.
 - Ask maintainers to add issue templates before routing many first-time contributors here.
 ```
+
+</details>
 
 ## Configuration
 

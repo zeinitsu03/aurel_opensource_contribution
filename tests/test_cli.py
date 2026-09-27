@@ -42,7 +42,71 @@ def test_main_start_command_shows_banner_without_repository(capsys):
     assert exit_code == 0
     assert "AUREL v1.0.0" in output
     assert "Contributor Readiness CLI" in output
-    assert "Aurel is ready" in output
+    assert "aurel https://github.com/owner/repo" in output
+
+
+def test_main_without_arguments_shows_quick_start(capsys):
+    exit_code = cli.main([])
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Try it:" in output
+    assert "aurel --help" in output
+
+
+def test_main_with_flags_but_no_repository_explains_what_is_missing(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main(["--format", "json"])
+
+    assert exc_info.value.code == 2
+    assert "a repository URL is required" in capsys.readouterr().err
+
+
+def test_main_prints_version(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main(["--version"])
+
+    assert exc_info.value.code == 0
+    assert capsys.readouterr().out.strip() == "aurel 1.0.0"
+
+
+def test_main_terminal_output_is_summary_by_default(monkeypatch, capsys):
+    _fake_analysis_run(monkeypatch)
+
+    exit_code = cli.main(["https://github.com/owner/repo"])
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Score: 58/100" in output
+    assert "Your first contribution:" in output
+    assert "--detailed" in output
+    assert "Improvement Backlog:" not in output
+
+
+def test_main_detailed_flag_shows_full_terminal_report(monkeypatch, capsys):
+    _fake_analysis_run(monkeypatch)
+
+    exit_code = cli.main(["https://github.com/owner/repo", "--detailed"])
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Contributor Readiness Score: 58/100 (58%)" in output
+    assert "Improvement Backlog:" in output
+
+
+def _fake_analysis_run(monkeypatch):
+    analysis = _analysis()
+    monkeypatch.setattr(cli, "load_config", lambda path=None: AurelConfig())
+    monkeypatch.setattr(
+        cli,
+        "parse_repository_url",
+        lambda url: Repository(provider="github", owner="owner", name="repo"),
+    )
+    monkeypatch.setattr(
+        cli,
+        "analyze_repository",
+        lambda repository, config, token=None: analysis,
+    )
 
 
 def test_main_rejects_start_alias_flags(capsys):
