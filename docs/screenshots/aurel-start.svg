@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="888" viewBox="0 0 1120 888" role="img" aria-labelledby="title desc">
   <title id="title">Aurel start command in a terminal</title>
-  <desc id="desc">A terminal screenshot showing the Aurel startup banner and ready message.</desc>
+  <desc id="desc">A terminal screenshot showing the Aurel startup banner and getting-started guide.</desc>
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.18"/>
@@ -14,8 +14,8 @@
       .success { fill: #86efac; font: 20px Consolas, "Courier New", monospace; }
     </style>
   </defs>
-  <rect width="1120" height="620" fill="#f6f8fb"/>
-  <rect x="40" y="32" width="1040" height="548" rx="8" fill="#0f172a" filter="url(#shadow)"/>
+  <rect width="1120" height="888" fill="#f6f8fb"/>
+  <rect x="40" y="32" width="1040" height="816" rx="8" fill="#0f172a" filter="url(#shadow)"/>
   <path d="M48 32h1024a8 8 0 0 1 8 8v34H40V40a8 8 0 0 1 8-8z" fill="#111827"/>
   <circle cx="70" cy="53" r="7" fill="#f87171"/>
   <circle cx="94" cy="53" r="7" fill="#fbbf24"/>
@@ -37,5 +37,13 @@
     <tspan x="72" dy="32">Profiles docs, workflow templates, issue quality, scoring, and first-PR guidance.</tspan>
     <tspan x="72" dy="32">Free deterministic core. No hosted AI or repository write access required.</tspan>
   </text>
-  <text x="72" y="536" class="success">Aurel is ready. Run a repository analysis command next.</text>
+  <text x="72" y="536" class="body" xml:space="preserve">Check whether a GitHub, GitLab, or Bitbucket repository is ready for</text>
+  <text x="72" y="566" class="body" xml:space="preserve">new contributors, and get a suggested first pull request.</text>
+  <text x="72" y="610" class="body" xml:space="preserve">Try it:</text>
+  <text x="72" y="640" class="success" xml:space="preserve">  aurel https://github.com/owner/repo</text>
+  <text x="72" y="684" class="body" xml:space="preserve">Useful options:</text>
+  <text x="72" y="714" class="body" xml:space="preserve">  --detailed              show the full report</text>
+  <text x="72" y="744" class="body" xml:space="preserve">  --output report.md      save a report (.md, .txt, .json, .html)</text>
+  <text x="72" y="774" class="body" xml:space="preserve">  --github-token TOKEN    avoid GitHub rate limits (or set GITHUB_TOKEN)</text>
+  <text x="72" y="818" class="body" xml:space="preserve">All options: aurel --help</text>
 </svg>

@@ -532,7 +532,11 @@ def _github_raw_file_exists(
         allow_redirects=True,
     )
     try:
-        return response.status_code == 200
+        if response.status_code == 200:
+            return True
+        if response.status_code == 404:
+            return False
+        raise _raw_fallback_error(response.status_code)
     finally:
         close = getattr(response, "close", None)
         if callable(close):
@@ -557,8 +561,20 @@ def _github_raw_file_content(
         close = getattr(response, "close", None)
         if callable(close):
             close()
-        return None
+        if response.status_code == 404:
+            return None
+        raise _raw_fallback_error(response.status_code)
     return _limited_response_text(response)
+
+
+def _raw_fallback_error(status_code: int) -> ProviderError:
+    """Fail loudly so a blocked fallback is never reported as a missing file."""
+
+    return ProviderError(
+        f"GitHub API returned 403 and the raw file fallback returned {status_code}. "
+        "This usually means a rate limit or a network proxy is blocking GitHub; "
+        "set GITHUB_TOKEN or pass --github-token and try again."
+    )
 
 
 def _github_raw_url(repository: Repository, path: str) -> str:
@@ -757,9 +773,7 @@ def _issue_looks_vague(issue: dict) -> bool:
         return True
     if len(words) >= 60 or detail_hits >= 2:
         return False
-    if len(words) >= 20 and detail_hits == 1:
-        return False
-    return True
+    return not (len(words) >= 20 and detail_hits == 1)
 
 
 def _issue_quality_notes(issues: tuple[dict, ...]) -> tuple[str, ...]:

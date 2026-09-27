@@ -7,7 +7,6 @@ from collections.abc import Callable
 from aurel.models import ProfileResult, Repository
 from aurel.providers import remote_file_exists
 
-
 FileExistsFunc = Callable[[Repository, str], bool]
 
 PROFILE_SIGNALS = {

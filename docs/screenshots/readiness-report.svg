@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="760" viewBox="0 0 1120 760" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="904" viewBox="0 0 1120 904" role="img" aria-labelledby="title desc">
   <title id="title">Aurel contributor readiness report in a terminal</title>
-  <desc id="desc">A terminal screenshot showing a contributor readiness score, score categories, top fixes, and Starter PR Kit.</desc>
+  <desc id="desc">A terminal screenshot showing a contributor readiness score, its biggest blocker, the top fixes, and a suggested first contribution.</desc>
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.18"/>
@@ -16,8 +16,8 @@
       .muted { fill: #94a3b8; font: 18px Consolas, "Courier New", monospace; }
     </style>
   </defs>
-  <rect width="1120" height="760" fill="#f6f8fb"/>
-  <rect x="40" y="32" width="1040" height="696" rx="8" fill="#0f172a" filter="url(#shadow)"/>
+  <rect width="1120" height="904" fill="#f6f8fb"/>
+  <rect x="40" y="32" width="1040" height="840" rx="8" fill="#0f172a" filter="url(#shadow)"/>
   <path d="M48 32h1024a8 8 0 0 1 8 8v34H40V40a8 8 0 0 1 8-8z" fill="#111827"/>
   <circle cx="70" cy="53" r="7" fill="#f87171"/>
   <circle cx="94" cy="53" r="7" fill="#fbbf24"/>
@@ -25,35 +25,27 @@
   <text x="560" y="59" text-anchor="middle" class="window-title">PowerShell - aurel repository analysis</text>
 
   <text x="72" y="112" class="prompt">PS C:\projects\aurel&gt; <tspan class="command">aurel https://github.com/owner/repo</tspan></text>
-  <text x="72" y="158" class="text">
-    <tspan x="72" dy="0">Repository: github:owner/repo</tspan>
-    <tspan x="72" dy="28">Detected Profile: Python project (Medium confidence)</tspan>
-  </text>
-
-  <text x="72" y="246" class="score">Contributor Readiness Score: 58/100 (58%)</text>
-  <text x="72" y="280" class="warning">Label: Needs improvement</text>
-  <text x="72" y="314" class="muted">Applied Score Cap: 75 (No contribution workflow guidance was detected.)</text>
-
-  <text x="72" y="378" class="heading">Score Categories:</text>
-  <text x="94" y="414" class="text">
-    <tspan x="94" dy="0">- Documentation Quality: 25/25</tspan>
-    <tspan x="94" dy="28">- Contributor Workflow: 0/25</tspan>
-    <tspan x="94" dy="28">- Setup &amp; Testing Clarity: 20/20</tspan>
-    <tspan x="94" dy="28">- Issue Readiness: 8/15</tspan>
-    <tspan x="94" dy="28">- Community &amp; Safety: 5/15</tspan>
-  </text>
-
-  <text x="580" y="378" class="heading">Top Fixes To Reach 90:</text>
-  <text x="602" y="414" class="text">
-    <tspan x="602" dy="0">- [High, +20] Add contribution guide</tspan>
-    <tspan x="602" dy="28">- [Medium, +15] Add security reporting</tspan>
-    <tspan x="602" dy="28">  instructions</tspan>
-  </text>
-
-  <text x="72" y="596" class="heading">Starter PR Kit:</text>
-  <text x="94" y="632" class="text">
-    <tspan x="94" dy="0">Recommended First Contribution: Add contributor instructions with setup,</tspan>
-    <tspan x="94" dy="28">branch naming, testing steps, and pull request guidelines.</tspan>
-    <tspan x="94" dy="28">Confidence: High</tspan>
-  </text>
+  <text x="72" y="158" class="text" xml:space="preserve">Repository: github:owner/repo</text>
+  <text x="72" y="186" class="text" xml:space="preserve">Profile: Python project (Medium confidence)</text>
+  <text x="72" y="228" class="score" xml:space="preserve">Score: 58/100 - Needs improvement</text>
+  <text x="72" y="256" class="warning" xml:space="preserve">Biggest blocker: No contribution workflow guidance was detected</text>
+  <text x="72" y="284" class="warning" xml:space="preserve">(score can't exceed 75 until fixed)</text>
+  <text x="72" y="326" class="heading" xml:space="preserve">Top fixes:</text>
+  <text x="72" y="354" class="text" xml:space="preserve">1. Add contribution guide (+20, High priority)</text>
+  <text x="72" y="382" class="muted" xml:space="preserve">   Add contributor instructions covering setup, tests, branch naming, review</text>
+  <text x="72" y="410" class="muted" xml:space="preserve">   expectations, and first PR guidance.</text>
+  <text x="72" y="438" class="text" xml:space="preserve">2. Add security reporting instructions (+15, Medium priority)</text>
+  <text x="72" y="466" class="muted" xml:space="preserve">   Add responsible disclosure instructions or a security contact path.</text>
+  <text x="72" y="494" class="text" xml:space="preserve">3. Add community behavior expectations (+10, Medium priority)</text>
+  <text x="72" y="522" class="muted" xml:space="preserve">   Add community behavior expectations if the project accepts external contributors.</text>
+  <text x="72" y="550" class="muted" xml:space="preserve">   ...and 2 more with --detailed</text>
+  <text x="72" y="592" class="heading" xml:space="preserve">Your first contribution:</text>
+  <text x="72" y="620" class="text" xml:space="preserve">- Change: Add or improve contributor instructions with setup, branch naming,</text>
+  <text x="72" y="648" class="text" xml:space="preserve">  testing steps, and pull request guidelines.</text>
+  <text x="72" y="676" class="text" xml:space="preserve">- Why: A clear contributing guide helps new developers understand how to make</text>
+  <text x="72" y="704" class="text" xml:space="preserve">  their first change without guessing the workflow.</text>
+  <text x="72" y="732" class="score" xml:space="preserve">- PR title: docs: add contributing guide for new contributors</text>
+  <text x="72" y="760" class="score" xml:space="preserve">- Commit message: docs: add CONTRIBUTING guide</text>
+  <text x="72" y="802" class="muted" xml:space="preserve">Run again with --detailed for findings, the onboarding path, backlog, and</text>
+  <text x="72" y="830" class="muted" xml:space="preserve">maintainer notes.</text>
 </svg>

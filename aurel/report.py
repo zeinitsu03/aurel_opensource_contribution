@@ -154,11 +154,15 @@ def format_html_report(analysis: AnalysisResult) -> str:
             "<body>",
             "<h1>Aurel Contributor Readiness Report</h1>",
             f"<p class=\"muted\">Repository: {html.escape(data['repository']['display_name'])}</p>",
-            f"<p class=\"score\">{score['value']}/{score['max_value']} "
-            f"({score['percentage']}%)</p>",
+            (
+                f"<p class=\"score\">{score['value']}/{score['max_value']} "
+                f"({score['percentage']}%)</p>"
+            ),
             f"<p>Label: <strong>{html.escape(score['label'])}</strong></p>",
-            f"<p>Profile: <strong>{html.escape(data['profile']['name'])}</strong> "
-            f"({html.escape(data['profile']['confidence'])} confidence)</p>",
+            (
+                f"<p>Profile: <strong>{html.escape(data['profile']['name'])}</strong> "
+                f"({html.escape(data['profile']['confidence'])} confidence)</p>"
+            ),
             "<h2>Score Categories</h2>",
             _html_table(
                 ("Category", "Score"),
@@ -203,8 +207,10 @@ def format_html_report(analysis: AnalysisResult) -> str:
             ),
             "<h2>Starter PR Kit</h2>",
             f"<p>{html.escape(data['starter_pr_kit']['contribution'])}</p>",
-            f"<p><strong>PR title:</strong> "
-            f"{html.escape(data['starter_pr_kit']['pr_title'])}</p>",
+            (
+                f"<p><strong>PR title:</strong> "
+                f"{html.escape(data['starter_pr_kit']['pr_title'])}</p>"
+            ),
             "</body>",
             "</html>",
         ]
@@ -255,8 +261,69 @@ def format_text_report(analysis: AnalysisResult) -> str:
     return format_terminal_report(analysis)
 
 
+SUMMARY_TOP_FIXES = 3
+
+
+def format_summary_report(analysis: AnalysisResult) -> str:
+    """Build the short default terminal report: score, top fixes, first PR."""
+
+    score = analysis.score
+    lines = [
+        f"Repository: {analysis.repository.display_name}",
+        f"Profile: {analysis.profile.name} ({analysis.profile.confidence} confidence)",
+        "",
+        f"Score: {score.value}/{score.max_value} - {score.label}",
+    ]
+    if score.applied_cap:
+        reason = score.applied_cap.reason.rstrip(".")
+        lines.append(
+            f"Biggest blocker: {reason} (score can't exceed {score.applied_cap.limit} "
+            "until fixed)"
+        )
+
+    lines.extend(["", "Top fixes:"])
+    shown = analysis.recommendations[:SUMMARY_TOP_FIXES]
+    if shown:
+        for index, item in enumerate(shown, start=1):
+            lines.append(
+                f"{index}. {item.title} (+{item.estimated_score_gain}, {item.priority} priority)"
+            )
+            lines.append(f"   {item.action}")
+        hidden = len(analysis.recommendations) - len(shown)
+        if hidden:
+            lines.append(f"   ...and {hidden} more with --detailed")
+    else:
+        lines.append("- No priority fixes suggested")
+
+    kit = analysis.starter_pr_kit
+    lines.extend(
+        [
+            "",
+            "Your first contribution:",
+            f"- Change: {kit.contribution}",
+            f"- Why: {kit.reason}",
+            f"- PR title: {kit.pr_title}",
+            f"- Commit message: {kit.commit_message}",
+        ]
+    )
+
+    if not analysis.issue_readiness.checked:
+        lines.extend(["", f"Note: {analysis.issue_readiness.note}"])
+
+    lines.extend(
+        [
+            "",
+            (
+                "Run again with --detailed for findings, the onboarding path, backlog, "
+                "and maintainer notes."
+            ),
+        ]
+    )
+    return "\n".join(lines)
+
+
 def format_terminal_report(analysis: AnalysisResult) -> str:
-    """Build a simple terminal report for the CLI."""
+    """Build the full terminal report for the CLI (shown with --detailed)."""
 
     lines = [
         f"Repository: {analysis.repository.display_name}",
@@ -547,6 +614,7 @@ def _recommendation_to_dict(recommendation) -> dict[str, Any]:
         "estimated_score_gain": recommendation.estimated_score_gain,
         "evidence": _evidence_items(recommendation.evidence),
         "source": recommendation.source,
+        "score_cap": recommendation.score_cap,
     }
 
 
@@ -639,8 +707,10 @@ def _comparison_lines(
     added = sorted(set(current_items) - set(previous_items))
     resolved = sorted(set(previous_items) - set(current_items))
     lines = [
-        f"- {label}: {len(previous_items)} -> {len(current_items)} "
-        f"({len(added)} new, {len(resolved)} resolved)"
+        (
+            f"- {label}: {len(previous_items)} -> {len(current_items)} "
+            f"({len(added)} new, {len(resolved)} resolved)"
+        )
     ]
     for item_id in added[:3]:
         lines.append(f"  - New: {current_items[item_id]}")

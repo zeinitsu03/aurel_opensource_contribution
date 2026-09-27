@@ -1,12 +1,15 @@
+import pytest
+
+from aurel import providers
 from aurel.models import Repository
 from aurel.providers import (
     MAX_REMOTE_CONTENT_BYTES,
+    ProviderError,
     remote_file_content,
     remote_file_exists,
     remote_issue_readiness,
     remote_repository_paths,
 )
-from aurel import providers
 
 
 class FakeResponse:
@@ -24,8 +27,7 @@ class FakeResponse:
     def iter_content(self, chunk_size=1):
         if self._chunks is None:
             return
-        for chunk in self._chunks:
-            yield chunk
+        yield from self._chunks
 
     def close(self):
         self.closed = True
@@ -131,6 +133,43 @@ def test_github_file_exists_falls_back_to_raw_when_api_is_forbidden(monkeypatch)
     )
     assert fake_requests.calls[1][1]["allow_redirects"] is True
     assert fake_requests.calls[1][1]["stream"] is True
+
+
+def test_github_file_exists_raw_404_means_missing(monkeypatch):
+    fake_requests = FakeRequests([FakeResponse(403), FakeResponse(404)])
+    monkeypatch.setattr(providers, "_load_requests", lambda: fake_requests)
+
+    exists = remote_file_exists(
+        Repository(provider="github", owner="owner", name="repo"),
+        "README.md",
+    )
+
+    assert exists is False
+
+
+@pytest.mark.parametrize("status_code", [403, 429, 500])
+def test_github_file_exists_raises_when_raw_fallback_is_blocked(monkeypatch, status_code):
+    fake_requests = FakeRequests([FakeResponse(403), FakeResponse(status_code)])
+    monkeypatch.setattr(providers, "_load_requests", lambda: fake_requests)
+
+    with pytest.raises(ProviderError, match="GITHUB_TOKEN"):
+        remote_file_exists(
+            Repository(provider="github", owner="owner", name="repo"),
+            "README.md",
+        )
+
+
+def test_github_file_content_raises_when_raw_fallback_is_blocked(monkeypatch):
+    blocked_response = FakeResponse(429)
+    fake_requests = FakeRequests([FakeResponse(403), blocked_response])
+    monkeypatch.setattr(providers, "_load_requests", lambda: fake_requests)
+
+    with pytest.raises(ProviderError, match="429"):
+        remote_file_content(
+            Repository(provider="github", owner="owner", name="repo"),
+            "README.md",
+        )
+    assert blocked_response.closed is True
 
 
 def test_github_repository_paths_uses_default_branch_tree(monkeypatch):

@@ -7,7 +7,6 @@ from collections.abc import Callable
 from aurel.models import Repository, WorkflowReadiness
 from aurel.providers import remote_file_exists
 
-
 FileExistsFunc = Callable[[Repository, str], bool]
 
 ISSUE_TEMPLATE_PATHS = (

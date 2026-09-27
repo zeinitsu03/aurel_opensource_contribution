@@ -17,7 +17,7 @@ Use this page when you are writing CI checks, dashboards, comparison scripts, or
 - `workflow_readiness`: issue and pull request template status.
 - `signals`: configured contributor-readiness signals.
 - `findings`: evidence-backed findings with stable `id` values.
-- `recommendations`: ranked fixes with stable `id` values.
+- `recommendations`: ranked fixes with stable `id` values. Each fix includes `score_cap`, the maximum score while that gap remains (`null` when it does not cap the score). Fixes that lift the strictest cap are listed first, then by priority and estimated gain.
 - `starter_pr_kit`: suggested first contribution, title, commit message, and checklist.
 - `backlog`: maintainer-facing improvement backlog.
 - `onboarding_plan`: read-first, run-first, and change-first guidance.

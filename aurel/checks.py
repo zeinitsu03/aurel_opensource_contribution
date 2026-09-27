@@ -8,7 +8,6 @@ from aurel.config import DEFAULT_COMMUNITY_FILES, DEFAULT_SIGNAL_LABELS, AurelCo
 from aurel.models import CommunitySignal, Repository
 from aurel.providers import remote_file_exists
 
-
 COMMUNITY_FILES = DEFAULT_COMMUNITY_FILES
 
 FileExistsFunc = Callable[[Repository, str], bool]

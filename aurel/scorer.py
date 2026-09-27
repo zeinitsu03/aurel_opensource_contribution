@@ -14,7 +14,6 @@ from aurel.models import (
     ScoreResult,
 )
 
-
 DEFAULT_ISSUE_READINESS = IssueReadiness(
     checked=False,
     beginner_issue_count=0,

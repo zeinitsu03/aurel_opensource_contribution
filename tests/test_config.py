@@ -1,8 +1,8 @@
-import pytest
 from pathlib import Path
 
-from aurel.config import ConfigError, load_config
+import pytest
 
+from aurel.config import ConfigError, load_config
 
 TEST_ARTIFACTS = Path(".test_artifacts")
 

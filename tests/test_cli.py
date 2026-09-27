@@ -3,17 +3,16 @@ from pathlib import Path
 
 import pytest
 
-from aurel import cli
 from aurel import __main__ as package_main
+from aurel import cli
+from aurel.analyzer import analyze_repository
 from aurel.config import AurelConfig
 from aurel.models import IssueReadiness, Repository
-from aurel.analyzer import analyze_repository
-
 
 TEST_ARTIFACTS = Path(".test_artifacts")
 
 
-def test_main_shows_aurel_banner_for_terminal_output(monkeypatch, capsys):
+def test_main_terminal_report_starts_with_report_not_banner(monkeypatch, capsys):
     analysis = _analysis()
     monkeypatch.setattr(cli, "load_config", lambda path=None: AurelConfig())
     monkeypatch.setattr(
@@ -31,9 +30,8 @@ def test_main_shows_aurel_banner_for_terminal_output(monkeypatch, capsys):
 
     output = capsys.readouterr().out
     assert exit_code == 0
-    assert "AUREL v1.0.0" in output
-    assert "Contributor Readiness CLI" in output
-    assert "Repository: github:owner/repo" in output
+    assert output.startswith("Repository: github:owner/repo")
+    assert "AUREL v1.0.0" not in output
 
 
 def test_main_start_command_shows_banner_without_repository(capsys):
@@ -43,7 +41,71 @@ def test_main_start_command_shows_banner_without_repository(capsys):
     assert exit_code == 0
     assert "AUREL v1.0.0" in output
     assert "Contributor Readiness CLI" in output
-    assert "Aurel is ready" in output
+    assert "aurel https://github.com/owner/repo" in output
+
+
+def test_main_without_arguments_shows_quick_start(capsys):
+    exit_code = cli.main([])
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Try it:" in output
+    assert "aurel --help" in output
+
+
+def test_main_with_flags_but_no_repository_explains_what_is_missing(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main(["--format", "json"])
+
+    assert exc_info.value.code == 2
+    assert "a repository URL is required" in capsys.readouterr().err
+
+
+def test_main_prints_version(capsys):
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main(["--version"])
+
+    assert exc_info.value.code == 0
+    assert capsys.readouterr().out.strip() == "aurel 1.0.0"
+
+
+def test_main_terminal_output_is_summary_by_default(monkeypatch, capsys):
+    _fake_analysis_run(monkeypatch)
+
+    exit_code = cli.main(["https://github.com/owner/repo"])
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Score: 58/100" in output
+    assert "Your first contribution:" in output
+    assert "--detailed" in output
+    assert "Improvement Backlog:" not in output
+
+
+def test_main_detailed_flag_shows_full_terminal_report(monkeypatch, capsys):
+    _fake_analysis_run(monkeypatch)
+
+    exit_code = cli.main(["https://github.com/owner/repo", "--detailed"])
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Contributor Readiness Score: 58/100 (58%)" in output
+    assert "Improvement Backlog:" in output
+
+
+def _fake_analysis_run(monkeypatch):
+    analysis = _analysis()
+    monkeypatch.setattr(cli, "load_config", lambda path=None: AurelConfig())
+    monkeypatch.setattr(
+        cli,
+        "parse_repository_url",
+        lambda url: Repository(provider="github", owner="owner", name="repo"),
+    )
+    monkeypatch.setattr(
+        cli,
+        "analyze_repository",
+        lambda repository, config, token=None: analysis,
+    )
 
 
 def test_main_rejects_start_alias_flags(capsys):
@@ -169,7 +231,7 @@ def test_main_infers_text_report_from_txt_output(monkeypatch, capsys):
     captured = capsys.readouterr()
     saved_report = output_path.read_text(encoding="utf-8")
     assert exit_code == 0
-    assert "AUREL v1.0.0" in captured.out
+    assert captured.out.startswith("Repository: github:owner/repo")
     assert saved_report.startswith("Repository: github:owner/repo")
     assert "# Aurel Contributor Readiness Report" not in saved_report
     assert "Text report written" in captured.err
