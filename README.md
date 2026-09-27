@@ -97,13 +97,13 @@ Running `aurel` on its own prints a short getting-started guide. To analyze a re
 aurel https://github.com/owner/repo
 ```
 
-By default the terminal shows a short summary: the score, what is holding it back, the top three fixes, and a suggested first contribution. Add `--detailed` for the full report with findings, the newcomer onboarding path, the improvement backlog, and maintainer notes:
+By default the terminal shows a short summary: the score, its biggest blocker, the top three fixes, and a suggested first contribution. Add `--detailed` for the full report with findings, the newcomer onboarding path, the improvement backlog, and maintainer notes:
 
 ```bash
 aurel https://github.com/owner/repo --detailed
 ```
 
-Terminal runs show an AUREL startup banner before the report. Machine-readable formats such as `--format json` do not include the banner, so CI and dashboards can parse output safely. Saved reports (`--output`) and non-terminal formats always contain the full report.
+The AUREL banner only appears for `aurel` and `aurel start`; analysis output starts directly with the report, so CI and dashboards can parse `--format json` output safely. Saved reports (`--output`) and non-terminal formats always contain the full report.
 
 Write a plain text report document:
 
@@ -148,13 +148,35 @@ Use a custom config:
 aurel https://github.com/owner/repo --config examples/aurel.yml
 ```
 
-Use a GitHub token:
+### Using a GitHub token (recommended)
+
+A token is optional, but without one GitHub allows only 60 API requests per hour from your network, and each analysis makes several. With a token the limit is 5,000 per hour. If you hit the limit, Aurel stops with an error that mentions `GITHUB_TOKEN`.
+
+The token needs no special permissions. To create one:
+
+1. On GitHub, open **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
+2. Give it a name such as `aurel` and an expiration date.
+3. Under **Repository access**, choose **Public repositories (read-only)**. Leave all permissions unset.
+4. Click **Generate token** and copy it.
+
+Then set it as an environment variable so Aurel picks it up automatically.
+
+macOS or Linux (add the line to `~/.bashrc` or `~/.zshrc` to keep it):
 
 ```bash
-aurel https://github.com/owner/repo --github-token YOUR_TOKEN
+export GITHUB_TOKEN=paste_your_token_here
 ```
 
-The token is optional. Public repositories can be analyzed without one, but GitHub may rate-limit unauthenticated requests more quickly. Aurel only sends this token to GitHub requests.
+Windows PowerShell (the second command keeps it for future terminals):
+
+```powershell
+$env:GITHUB_TOKEN = "paste_your_token_here"
+[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "paste_your_token_here", "User")
+```
+
+If you already use the [GitHub CLI](https://cli.github.com), `export GITHUB_TOKEN=$(gh auth token)` works too. You can also pass `--github-token`, but the environment variable keeps the token out of your shell history.
+
+Aurel only sends the token to GitHub, never to GitLab or Bitbucket. Never commit a token to a repository.
 
 ## Screenshots
 
@@ -198,7 +220,7 @@ If `python -m venv .venv` fails during `ensurepip` with `PermissionError` under 
 
 If you see `Could not reach remote provider`, the CLI started correctly but could not reach GitHub, GitLab, or Bitbucket over HTTPS. Check VPN/proxy/firewall settings, confirm the provider API is reachable in the browser, or configure `HTTPS_PROXY` if your network requires a proxy.
 
-If GitHub returns `403`, you may be rate-limited. Set `GITHUB_TOKEN` or pass `--github-token`; Aurel only sends that token to GitHub requests.
+If GitHub returns `403`, you are probably rate-limited. Set `GITHUB_TOKEN` as described in [Using a GitHub token](#using-a-github-token-recommended).
 
 ## Example Output
 
@@ -209,7 +231,7 @@ Repository: github:owner/repo
 Profile: Python project (Medium confidence)
 
 Score: 58/100 - Needs improvement
-Held back by: No contribution workflow guidance was detected (max 75)
+Biggest blocker: No contribution workflow guidance was detected (score can't exceed 75 until fixed)
 
 Top fixes:
 1. Add contribution guide (+20, High priority)

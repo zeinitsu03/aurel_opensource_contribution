@@ -57,7 +57,7 @@ The CLI does not run code from analyzed repositories. It only parses the target 
 
 For GitHub repositories, Aurel first asks for the repository tree and caches the returned paths for the current analysis. That avoids dozens of one-file API requests when profile detection, contributor-signal checks, and workflow-template checks all need file existence answers. If the tree lookup is blocked or unsupported, Aurel falls back to targeted file checks. If the GitHub API and the raw file fallback are both blocked (for example by rate limits or a proxy), Aurel stops with an error instead of reporting files as missing.
 
-Machine-readable output must stay clean: terminal runs can show the banner, but JSON output should not include human status lines on stdout. Plain text output is intended for saved `.txt` report documents and does not include the startup banner. The default terminal output is a short summary (`format_summary_report`); `--detailed` switches to the full terminal report, and every other format always contains the full report.
+Machine-readable output must stay clean: the banner is only printed by `aurel` and `aurel start`, and JSON output should not include human status lines on stdout. Plain text output is intended for saved `.txt` report documents and does not include the startup banner. The default terminal output is a short summary (`format_summary_report`); `--detailed` switches to the full terminal report, and every other format always contains the full report.
 
 ## Extension Points
 

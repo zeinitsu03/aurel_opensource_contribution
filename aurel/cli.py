@@ -173,8 +173,6 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     report_format = args.format or "terminal"
-    if report_format == "terminal":
-        print(startup_banner())
     print(_format_report(analysis, report_format, args.detailed))
 
     if args.output:

@@ -12,7 +12,7 @@ from aurel.models import IssueReadiness, Repository
 TEST_ARTIFACTS = Path(".test_artifacts")
 
 
-def test_main_shows_aurel_banner_for_terminal_output(monkeypatch, capsys):
+def test_main_terminal_report_starts_with_report_not_banner(monkeypatch, capsys):
     analysis = _analysis()
     monkeypatch.setattr(cli, "load_config", lambda path=None: AurelConfig())
     monkeypatch.setattr(
@@ -30,9 +30,8 @@ def test_main_shows_aurel_banner_for_terminal_output(monkeypatch, capsys):
 
     output = capsys.readouterr().out
     assert exit_code == 0
-    assert "AUREL v1.0.0" in output
-    assert "Contributor Readiness CLI" in output
-    assert "Repository: github:owner/repo" in output
+    assert output.startswith("Repository: github:owner/repo")
+    assert "AUREL v1.0.0" not in output
 
 
 def test_main_start_command_shows_banner_without_repository(capsys):
@@ -232,7 +231,7 @@ def test_main_infers_text_report_from_txt_output(monkeypatch, capsys):
     captured = capsys.readouterr()
     saved_report = output_path.read_text(encoding="utf-8")
     assert exit_code == 0
-    assert "AUREL v1.0.0" in captured.out
+    assert captured.out.startswith("Repository: github:owner/repo")
     assert saved_report.startswith("Repository: github:owner/repo")
     assert "# Aurel Contributor Readiness Report" not in saved_report
     assert "Text report written" in captured.err
